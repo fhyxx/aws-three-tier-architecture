@@ -3,37 +3,64 @@
 
 **Region:** us-east-1 (N. Virginia)
 
-```mermaid id="p4n8s2"
+```mermaid id="az3tier"
 flowchart TB
     Internet["Internet"]
     IGW["Internet Gateway"]
-    VPC["Pelumi VPC<br/>10.0.0.0/16"]
 
     Internet --> IGW
-    IGW --> VPC
 
-    VPC --> PUB1["Public Subnet AZ1<br/>10.0.1.0/24"]
-    VPC --> PUB2["Public Subnet AZ2<br/>10.0.2.0/24"]
+    subgraph VPC["Pelumi VPC - 10.0.0.0/16"]
+        direction TB
 
-    VPC --> APP1["Application Subnet AZ1<br/>10.0.11.0/24"]
-    VPC --> APP2["Application Subnet AZ2<br/>10.0.12.0/24"]
+        subgraph AZ1["Availability Zone us-east-1a"]
+            direction LR
+            PUB1["Public Subnet<br/>10.0.1.0/24"]
+            APP1["Application Subnet<br/>10.0.11.0/24"]
+            DB1["Database Subnet<br/>10.0.21.0/24"]
+            PUB1 ~~~ APP1
+            APP1 ~~~ DB1
+        end
 
-    VPC --> DB1["Database Subnet AZ1<br/>10.0.21.0/24"]
-    VPC --> DB2["Database Subnet AZ2<br/>10.0.22.0/24"]
+        subgraph AZ2["Availability Zone us-east-1b"]
+            direction LR
+            PUB2["Public Subnet<br/>10.0.2.0/24"]
+            APP2["Application Subnet<br/>10.0.12.0/24"]
+            DB2["Database Subnet<br/>10.0.22.0/24"]
+            PUB2 ~~~ APP2
+            APP2 ~~~ DB2
+        end
+    end
+
+    IGW --> PUB1
+    IGW --> PUB2
+
+    classDef public fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef application fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef database fill:#fef3c7,stroke:#d97706,color:#78350f
+
+    class PUB1,PUB2 public
+    class APP1,APP2 application
+    class DB1,DB2 database
 ```
 
-## Network Design
+## Routing Design
 
-- One VPC with CIDR 10.0.0.0/16
-- Six subnets across two Availability Zones
-- Public subnets have routes to the Internet Gateway
-- Application subnets use local-only routing
-- Database subnets use local-only routing
-- No NAT Gateway was deployed
+| Tier | Route table | Routing |
+|---|---|---|
+| Public | `pelumi-public-rt` | Local route and Internet Gateway default route |
+| Application | `pelumi-private-app-rt` | Local route only |
+| Database | `pelumi-isolated-db-rt` | Local route only |
 
-## Deployment Status
+## Implementation Status
 
-- EC2 web application: deployed and tested
+- VPC and six subnets: configured
+- Internet Gateway: attached
+- Security groups: configured
+- EC2 web application: deployed and validated
 - Application Load Balancer: tested, then deleted
 - RDS subnet group: created
-- RDS database instance: not launched
+- RDS database instance: not deployed
+- NAT Gateway: not deployed
+
+**Note:** The subnet grouping shows the intended network design. The EC2 instance's actual subnet placement must be verified before describing it as deployed in the private application tier.
