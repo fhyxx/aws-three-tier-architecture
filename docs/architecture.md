@@ -1,4 +1,3 @@
-
 # AWS Three-Tier Architecture Documentation
 
 ## 1. Project Objective
@@ -215,3 +214,4 @@ Future improvements may include:
 - Infrastructure as Code
 - Automated CI/CD
 - Enhanced monitoring and observability
+docs: add AWS architecture documentation
