@@ -1,4 +1,10 @@
 
+### Architecture Diagram
+
+[View the AWS Three-Tier Architecture Diagram](docs/architecture-diagram.md)
+
+[Read the Technical Architecture Documentation](docs/architecture.md)
+
 # AWS Three-Tier Architecture Project
 
 ## Project Overview
