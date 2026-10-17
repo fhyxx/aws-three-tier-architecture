@@ -81,4 +81,12 @@ Additional documentation will include:
 Pelumi Oke
 
 AWS Cloud Engineering | Solutions Architecture
-docs: initialize AWS three-tier architecture project
+
+## Technical Documentation
+
+- [Architecture Documentation](docs/architecture.md)
+- [Architecture Diagram](docs/architecture-diagram.md)
+- [EC2 Deployment Guide](docs/deployment-guide.md)
+- [Troubleshooting Case Study](docs/troubleshooting.md)
+
+
