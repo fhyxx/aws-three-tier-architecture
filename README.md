@@ -28,14 +28,14 @@ The VPC contains public, application, and database subnets in `us-east-1a` and `
 | Separate route tables by tier | Configured |
 | Security groups | Configured; review current rules before production use |
 | EC2 web test application | Deployed and validated |
-| systemd service | Active; tested after reboot |
+| systemd service | Confirmed active during validation, including after an EC2 reboot |
 | Systems Manager Session Manager | Used successfully |
 | Application Load Balancer and target group | Tested successfully, then deleted |
 | RDS subnet group | Created |
 | RDS database instance | Not deployed |
 | NAT Gateway | Not deployed |
 
-Validation included a local HTTP `200 OK` response, confirmation that the service was active and listening on TCP port 80, and successful browser access to the web page.
+At the time of testing, validation included a local HTTP `200 OK` response, confirmation that the service was active and listening on TCP port 80, and successful browser access to the web page. These results are historical validation evidence, not a live uptime claim.
 
 ## Technical Documentation
 
