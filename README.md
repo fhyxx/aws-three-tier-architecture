@@ -89,4 +89,3 @@ AWS Cloud Engineering | Solutions Architecture
 - [EC2 Deployment Guide](docs/deployment-guide.md)
 - [Troubleshooting Case Study](docs/troubleshooting.md)
 
-
