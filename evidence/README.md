@@ -22,12 +22,10 @@ This directory contains screenshots demonstrating the configuration and validati
 
 The Application Load Balancer and target group were temporarily deployed, tested successfully, and subsequently deleted to control costs.
 
-If available, historical screenshots may be included with filenames beginning with `historical-`. They must not be presented as currently deployed resources.
-
 ## Security and Privacy
 
 Screenshots should not contain passwords, access keys, session tokens, or other secrets.
 
-Sensitive account details and unnecessary identifiers should be cropped or redacted before publication.
+Sensitive account details and unnecessary identifiers were cropped or redacted before publication.
 
-Only include evidence that accurately represents the project configuration at the time of capture.
+Evidence that accurately represents the project configuration at the time of capture.
