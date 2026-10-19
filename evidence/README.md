@@ -1,31 +1,24 @@
-
 # Project Evidence
 
-This directory contains screenshots demonstrating the configuration and validation of the AWS three-tier architecture project.
+These screenshots document AWS Console configuration and validation at the time they were captured. The updated screenshot filenames are retained below.
 
-## Evidence Index
-
-| Evidence | What it demonstrates |
+| Screenshot | Evidence area |
 |---|---|
-| 01-vpc-overview.png | VPC configuration and CIDR block |
-| 02-subnets.png | Six subnets across two Availability Zones |
-| 03-route-tables.png | Public and isolated-tier routing |
-| 04-internet-gateway.png | Internet Gateway attachment |
-| 05-security-groups.png | Security group configuration |
-| 06-ec2-instance.png | Existing EC2 instance configuration |
-| 07-application-validation.png | Successful application response |
-| 08-ssm-access.png | Systems Manager access and service validation |
-| 09-rds-subnet-group.png | Database subnet group configuration |
-| 10-budget-controls.png | AWS budget and cost-monitoring controls |
+| [vpc sum.png](vpc%20sum.png) | VPC overview |
+| [vpc subnets.png](vpc%20subnets.png) | VPC subnet view |
+| [Route table.png](Route%20table.png) | Route table configuration |
+| [Igw.png](Igw.png) | Internet Gateway |
+| [security group (2).png](security%20group%20%282%29.png) | Revised security group evidence |
+| [instance ed.png](instance%20ed.png) | Revised EC2 instance evidence |
+| [Screenshot (203).png](Screenshot%20%28203%29.png) | Application/browser evidence |
+| [Session manager.png](Session%20manager.png) | Session Manager / instance validation |
+| [10-aws-budget-control.png](10-aws-budget-control.png) | Updated AWS budget evidence |
 
-## Historical Evidence
+## Interpretation and Limitations
 
-The Application Load Balancer and target group were temporarily deployed, tested successfully, and subsequently deleted to control costs.
-
-## Security and Privacy
-
-Screenshots should not contain passwords, access keys, session tokens, or other secrets.
-
-Sensitive account details and unnecessary identifiers were cropped or redacted before publication.
-
-Evidence that accurately represents the project configuration at the time of capture.
+- Screenshots are point-in-time evidence, not live verification of the current resource state.
+- The temporary Application Load Balancer and target group were tested and subsequently deleted.
+- No RDS database instance or NAT Gateway was launched. An RDS subnet group was prepared, but a screenshot of it is not currently indexed here.
+- The $5 AWS Budget is an alert, not a hard spending cap.
+- Screenshot contents, including account identifiers, IP addresses, and billing details, should be visually checked before public distribution.
+- The original `sg.png` remains in the repository but is not linked as the preferred revised security-group evidence.
