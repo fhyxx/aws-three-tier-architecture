@@ -1,4 +1,3 @@
-
 # AWS Troubleshooting Case Study
 
 ## Incident: Application Load Balancer Target Health
@@ -60,13 +59,3 @@ The application remained accessible directly through the EC2 public IPv4 address
 - Deploy the application in the intended private application tier.
 - Use an Application Load Balancer as the controlled public entry point.
 - Introduce infrastructure automation and repeatable deployment procedures.
-
-## Interview Summary
-
-I deployed a lightweight web application on an existing Amazon EC2 instance, validated it independently, and tested access through an Application Load Balancer.
-
-When the target initially reported a timeout, I checked application health, the listening port, and security group configuration. The target later became healthy and the application was successfully served through the load balancer.
-
-After testing, I removed the temporary load balancer resources to control costs while preserving the working instance and its attached storage.
-
-I would not attribute the initial timeout to a specific root cause without sufficient evidence.
