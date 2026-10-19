@@ -1,6 +1,6 @@
 # Project Evidence
 
-These screenshots document AWS Console configuration and validation at the time they were captured. The updated images below were added directly to `main` during the screenshot review; their links point to that branch until PR #1 is merged.
+These screenshots document AWS Console configuration and validation at the time they were captured. The updated screenshot filenames are retained below.
 
 | Screenshot | Evidence area |
 |---|---|
@@ -8,11 +8,11 @@ These screenshots document AWS Console configuration and validation at the time 
 | [vpc subnets.png](vpc%20subnets.png) | VPC subnet view |
 | [Route table.png](Route%20table.png) | Route table configuration |
 | [Igw.png](Igw.png) | Internet Gateway |
-| [security group (2).png](https://github.com/fhyxx/aws-three-tier-architecture/blob/main/evidence/security%20group%20%282%29.png) | Revised security group evidence |
-| [instance ed.png](https://github.com/fhyxx/aws-three-tier-architecture/blob/main/evidence/instance%20ed.png) | Revised EC2 instance evidence |
+| [security group (2).png](security%20group%20%282%29.png) | Revised security group evidence |
+| [instance ed.png](instance%20ed.png) | Revised EC2 instance evidence |
 | [Screenshot (203).png](Screenshot%20(203).png) | Application/browser evidence |
 | [Session manager.png](Session%20manager.png) | Session Manager / instance validation |
-| [10-aws-budget-control.png](https://github.com/fhyxx/aws-three-tier-architecture/blob/main/evidence/10-aws-budget-control.png) | Updated AWS budget evidence |
+| [10-aws-budget-control.png](10-aws-budget-control.png) | Updated AWS budget evidence |
 
 ## Interpretation and Limitations
 
