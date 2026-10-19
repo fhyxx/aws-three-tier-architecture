@@ -20,5 +20,3 @@ These screenshots document AWS Console configuration and validation at the time 
 - The temporary Application Load Balancer and target group were tested and subsequently deleted.
 - No RDS database instance or NAT Gateway was launched. An RDS subnet group was prepared, but a screenshot of it is not currently indexed here.
 - The $5 AWS Budget is an alert, not a hard spending cap.
-- Screenshot contents, including account identifiers, IP addresses, and billing details, should be visually checked before public distribution.
-- The original `sg.png` remains in the repository but is not linked as the preferred revised security-group evidence.
