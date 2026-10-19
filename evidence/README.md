@@ -10,7 +10,7 @@ These screenshots document AWS Console configuration and validation at the time 
 | [Igw.png](Igw.png) | Internet Gateway |
 | [security group (2).png](security%20group%20%282%29.png) | Revised security group evidence |
 | [instance ed.png](instance%20ed.png) | Revised EC2 instance evidence |
-| [Screenshot (203).png](Screenshot%20(203).png) | Application/browser evidence |
+| [Screenshot (203).png](Screenshot%20%28203%29.png) | Application/browser evidence |
 | [Session manager.png](Session%20manager.png) | Session Manager / instance validation |
 | [10-aws-budget-control.png](10-aws-budget-control.png) | Updated AWS budget evidence |
 
