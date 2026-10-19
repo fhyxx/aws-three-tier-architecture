@@ -17,7 +17,7 @@ A cost-conscious AWS networking and application deployment portfolio project bui
 
 [Open the architecture diagram](docs/architecture-diagram.md) · [Read the architecture documentation](docs/architecture.md)
 
-The VPC contains public, application, and database subnets in `us-east-1a` and `us-east-1b`. The EC2 instance's actual subnet should be checked against the console evidence before describing it as deployed in the private application tier.
+The VPC contains public, application, and database subnets in `us-east-1a` and `us-east-1b`. Console inspection confirmed that the existing EC2 test instance is in subnet `10.0.1.0/24` in `us-east-1a`, with a default route to the Internet Gateway. It is currently in a **public subnet**, not the private application tier.
 
 ## Implementation and Validation
 
@@ -27,15 +27,15 @@ The VPC contains public, application, and database subnets in `us-east-1a` and `
 | Internet Gateway and public route | Configured |
 | Separate route tables by tier | Configured |
 | Security groups | Configured; review current rules before production use |
-| EC2 web test application | Deployed and validated |
-| systemd service | Confirmed active during validation, including after an EC2 reboot |
+| EC2 web test application | Deployed; local HTTP `200 OK` and external browser access confirmed on 2026-10-19 |
+| systemd service | `pelumi-test.service` confirmed active and enabled; reboot persistence was validated previously |
 | Systems Manager Session Manager | Used successfully |
 | Application Load Balancer and target group | Tested successfully, then deleted |
 | RDS subnet group | Created |
 | RDS database instance | Not deployed |
 | NAT Gateway | Not deployed |
 
-At the time of testing, validation included a local HTTP `200 OK` response, confirmation that the service was active and listening on TCP port 80, and successful browser access to the web page. These results are historical validation evidence, not a live uptime claim.
+Validation includes a local HTTP `200 OK` response, confirmation that `pelumi-test.service` is active and enabled, a listener on TCP port 80, and external browser access confirmed on 2026-10-19. These checks are point-in-time evidence, not a live uptime guarantee.
 
 ## Technical Documentation
 
@@ -49,11 +49,11 @@ At the time of testing, validation included a local HTTP `200 OK` response, conf
 
 The configured $5 AWS Budget is an alert, **not a hard spending cap**. EC2 and EBS may continue to incur charges while resources exist. Billing data can also be delayed.
 
-Session Manager was used for administrative access instead of relying on publicly exposed SSH. Before production use, review security group rules, verify the EC2 subnet and route table, restrict ingress to intended sources, and add appropriate HTTPS, monitoring, and application hardening.
+Session Manager was used for administrative access instead of relying on publicly exposed SSH. The current test instance is in a public subnet and its HTTP port 80 rule allows `0.0.0.0/0`. This is suitable only as a temporary test configuration, not a production security posture. Before production use, restrict ingress to intended sources (ideally the ALB security group when an ALB is deployed), add HTTPS, monitoring, and application hardening, and move the workload into the intended private application tier if required by the final design.
 
 ## Future Improvements
 
-- Verify and document the EC2 subnet placement; move the workload into private application subnets if that is the intended target design.
+- Move the workload into the intended private application subnet tier when the required controlled ingress path is implemented.
 - Deploy an ALB as the controlled public entry point only when needed and budgeted.
 - Add infrastructure as code and CI/CD.
 - Evaluate Auto Scaling, HTTPS, observability, and a managed database as future stages.
