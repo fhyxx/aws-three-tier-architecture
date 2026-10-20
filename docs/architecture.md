@@ -45,7 +45,7 @@ Components:
 - Dedicated application route table
 - Application security group
 
-A working EC2 web application was deployed and validated. Its exact subnet placement will be confirmed separately before representing it as a private-tier deployment.
+A working EC2 web test application was deployed and validated in the public subnet `10.0.1.0/24` (`us-east-1a`), rather than in the intended private application tier. Private-tier deployment remains a future improvement.
 
 ### Tier 3: Database
 
