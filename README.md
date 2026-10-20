@@ -26,7 +26,7 @@ The VPC contains public, application, and database subnets in `us-east-1a` and `
 | VPC and six subnets | Configured |
 | Internet Gateway and public route | Configured |
 | Separate route tables by tier | Configured |
-| Security groups | Configured; review current rules before production use |
+| Security groups | Configured |
 | EC2 web test application | Deployed; local HTTP `200 OK` and external browser access confirmed on 2026-10-19 |
 | systemd service | `pelumi-test.service` confirmed active and enabled; reboot persistence was validated previously |
 | Systems Manager Session Manager | Used successfully |
