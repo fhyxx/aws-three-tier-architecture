@@ -106,7 +106,7 @@ This validated systemd-based service startup and basic recovery after a reboot.
 
 ## 8. Operational Considerations
 
-- Confirm the instance subnet before classifying it as public or private.
+- The existing test instance is in public subnet `10.0.1.0/24` (`us-east-1a`), with an Internet Gateway default route; it is not deployed in the private application tier.
 - Restrict inbound access to approved sources.
 - Avoid exposing SSH unnecessarily when Session Manager is available.
 - Monitor EC2 and EBS charges.
