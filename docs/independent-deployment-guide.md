@@ -166,6 +166,7 @@ After=network.target
 Type=simple
 User=nobody
 Group=nobody
+AmbientCapabilities=CAP_NET_BIND_SERVICE
 WorkingDirectory=/opt/pelumi-test
 ExecStart=/usr/bin/python3 -m http.server 80 --directory /opt/pelumi-test
 Restart=always
