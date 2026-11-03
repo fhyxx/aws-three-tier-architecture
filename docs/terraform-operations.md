@@ -36,7 +36,7 @@ The EC2 instance remained running with its original public and private IP addres
 
 ## Baseline Validation
 
-The pre-refactor configuration passed formatting, validation, and a no-change plan against the existing S3 state on November 3, 2026. The refactored source must be revalidated against that same state before merge.
+On November 3, 2026, the published refactored source passed `terraform fmt -check -recursive`, `terraform validate`, and `terraform plan -detailed-exitcode` against the existing S3 backend. The plan reported `No changes. Your infrastructure matches the configuration.` The state inventory contained 32 resources. No apply was performed.
 
 See the detailed historical validation record in evidence/terraform-validation.md.
 

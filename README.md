@@ -46,13 +46,13 @@ The original import declarations are retained as migration history under `terraf
 | systemd service | Previously confirmed active and enabled; reboot persistence validated |
 | Systems Manager | Instance reported `Online` on 2026-11-02 |
 | EC2 root EBS volume | Encrypted gp3 replacement volume; in use |
-| Terraform baseline | `fmt`, `validate`, and no-change `plan` completed against the pre-refactor configuration on 2026-11-03 |
+| Terraform refactor | `fmt -check`, `validate`, 32-resource state inventory, and zero-change plan completed on 2026-11-03 |
 | Application Load Balancer and target group | Tested successfully, then deleted |
 | RDS subnet group | Created |
 | RDS database instance | Not deployed |
 | NAT Gateway | Not deployed |
 
-The November 2 and 3 checks are point-in-time evidence, not a live uptime guarantee. The Terraform refactor must be revalidated locally against the existing S3 state before it is merged. See [Terraform and EC2 validation evidence](evidence/terraform-validation.md).
+The November 2 and 3 checks are point-in-time evidence, not a live uptime guarantee. On November 3, 2026, the modular Terraform refactor passed formatting, validation, a 32-resource state inventory check, and a plan against the existing S3 backend with no infrastructure or state changes. See [Terraform and EC2 validation evidence](evidence/terraform-validation.md).
 
 ## Technical Documentation
 
@@ -81,4 +81,4 @@ Before production use, move the workload into the intended private application t
 
 ## Author
 
-Pelumi Oke · AWS Cloud Engineering / Solutions Architecture
+Pelumi Oke Â· AWS Cloud Engineering / Solutions Architecture
