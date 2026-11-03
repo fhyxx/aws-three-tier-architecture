@@ -1,4 +1,4 @@
-# Terraform
+# Terraform working data and state
 .terraform/
 *.tfstate
 *.tfstate.*
@@ -7,6 +7,8 @@ crash.log
 crash.*.log
 *.tfvars
 *.tfvars.json
+*.zip
+/terraform/backend.hcl
 
 # Operating systems
 .DS_Store
