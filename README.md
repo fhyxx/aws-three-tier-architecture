@@ -28,9 +28,11 @@ The VPC contains public, application, and database subnets in `us-east-1a` and `
 
 ## Infrastructure as Code and State Management
 
-The existing AWS resources were adopted into a modular Terraform configuration organized around networking, security groups, and compute. Module inputs now use Terraform outputs and variables rather than embedding VPC, subnet, and security-group IDs throughout the configuration.
+The existing AWS resources were adopted into a modular Terraform configuration organized around networking, security groups, and compute. Module inputs use Terraform outputs and variables rather than embedding VPC, subnet, and security-group IDs throughout the configuration.
 
-The remote state backend uses the existing S3 bucket and key configured locally through the ignored `terraform/backend.hcl` file. The backend uses encryption and native S3 state locking with `use_lockfile = true`. See [Terraform setup instructions](terraform/README.md). Do not commit backend configuration, variable files, state, credentials, or plan files.
+The remote state backend for the existing deployment uses the S3 bucket and key configured locally through the ignored `terraform/backend.hcl` file. The backend uses encryption and native S3 state locking with `use_lockfile = true`. Do not commit backend configuration, variable files, state, credentials, or plan files.
+
+**New users must not point Terraform at the existing deployment's state.** The [Independent Fresh-Account Deployment Guide](docs/independent-deployment-guide.md) explains how to create a separate S3 backend, configure credentials and IAM prerequisites in your own AWS account, validate and plan a fresh deployment, deploy the EC2 test application, and verify HTTP access. The two workflows are intentionally separate.
 
 The original import declarations are retained as migration history under `terraform/migration/imports.tf.example`; they are not active Terraform configuration.
 
@@ -59,6 +61,7 @@ The November 2 and 3 checks are point-in-time evidence, not a live uptime guaran
 - [Architecture design and routing](docs/architecture.md)
 - [Architecture diagram](docs/architecture-diagram.md)
 - [EC2 deployment guide](docs/deployment-guide.md)
+- [Independent fresh-account deployment guide](docs/independent-deployment-guide.md)
 - [Troubleshooting case study](docs/troubleshooting.md)
 - [Terraform operations and remote state](docs/terraform-operations.md)
 - [Evidence index and screenshots](evidence/README.md)
