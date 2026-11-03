@@ -1,4 +1,4 @@
-# AWS Three-Tier Architecture on AWS
+# AWS Three-Tier Network and Application Foundation
 
 A cost-conscious AWS networking and application deployment portfolio project demonstrating VPC design, subnet segmentation, security group controls, EC2 operations, infrastructure-as-code practices, remote state management, and storage encryption.
 
@@ -15,7 +15,7 @@ A cost-conscious AWS networking and application deployment portfolio project dem
 - **State management:** Amazon S3 remote state with versioning, server-side encryption, public access blocked, and native S3 lockfile support.
 - **Storage security:** Encrypted gp3 EC2 root EBS volume.
 - **Operations:** AWS Systems Manager Session Manager for instance administration.
-- **Cost control:** No NAT Gateway or persistent ALB; AWS Budget alert configured.
+- **Cost control:** No NAT Gateway or persistent ALB; AWS Budgets alert configured.
 
 ## Architecture
 
@@ -66,7 +66,7 @@ The November 2 and 3 checks are point-in-time evidence, not a live uptime guaran
 
 ## Cost and Security Considerations
 
-The configured $5 AWS Budget is an alert, **not a hard spending cap**. EC2 and EBS may continue to incur charges while resources exist, and billing data can be delayed.
+The configured $5 AWS Budgets alert is **not a hard spending cap**. EC2 and EBS may continue to incur charges while resources exist, and billing data can be delayed.
 
 The EC2 root volume is encrypted and the instance requires IMDSv2. Session Manager is used for administrative access rather than relying on publicly exposed SSH. The current test instance remains in a public subnet and its HTTP port 80 rule allows the configured administrator CIDR; this is a temporary test configuration, not a production security posture.
 
