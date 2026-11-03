@@ -1,0 +1,6 @@
+# Copy this file to terraform.tfvars and replace the example CIDR
+# with your current public IPv4 address in /32 notation.
+admin_cidr = "203.0.113.10/32"
+
+# ami_id defaults to the AMI currently used by the existing EC2 instance.
+# Override it only when intentionally planning an instance replacement.
