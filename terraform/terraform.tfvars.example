@@ -1,4 +1,6 @@
-# Copy to terraform.tfvars (ignored by Git) and fill in the existing values.
-ami_id                = "REPLACE_WITH_EXISTING_INSTANCE_AMI_ID"
-admin_cidr            = "REPLACE_WITH_EXISTING_ADMIN_CIDR/32"
-instance_profile_name = "pelumi-ec2-ssm-role"
+# Copy to terraform.tfvars (ignored by Git) and replace every placeholder.
+# For an independent deployment, see docs/independent-deployment-guide.md.
+aws_region            = "us-east-1"
+ami_id                = "REPLACE_WITH_AMAZON_LINUX_2023_X86_64_AMI_ID"
+admin_cidr            = "REPLACE_WITH_YOUR_PUBLIC_IPV4/32"
+instance_profile_name = "REPLACE_WITH_YOUR_EC2_INSTANCE_PROFILE_NAME"
