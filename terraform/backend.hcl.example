@@ -1,0 +1,4 @@
+# Copy to backend.hcl (ignored by Git) and set the existing bucket.
+bucket  = "REPLACE_WITH_EXISTING_TERRAFORM_STATE_BUCKET"
+region  = "us-east-1"
+profile = "portfolio"
