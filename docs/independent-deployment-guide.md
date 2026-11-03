@@ -7,7 +7,7 @@ This guide is for a technically competent engineer reproducing the project in **
 ## 1. What you need
 
 - An AWS account where you are authorized to create VPC, EC2, security-group, IAM instance-profile, and S3 resources.
-- AWS CLI v2 and Terraform 1.10.0 or later.
+- AWS CLI v2, the AWS Systems Manager Session Manager plugin, and Terraform 1.10.0 or later.
 - PowerShell 7 or Windows PowerShell 5.1 (commands below use PowerShell syntax).
 - An AWS CLI profile for your own account. AWS IAM Identity Center/SSO is preferred.
 - A globally unique S3 bucket name for your Terraform state.
@@ -83,7 +83,7 @@ aws iam create-instance-profile --instance-profile-name project01-ec2-ssm-profil
 aws iam add-role-to-instance-profile --instance-profile-name project01-ec2-ssm-profile --role-name project01-ec2-ssm-role
 ```
 
-Allow a short period for IAM propagation before creating the EC2 instance. The identity running Terraform must be allowed to pass this specific role to EC2 (`iam:PassRole`), in addition to the required EC2/VPC/security-group and S3 backend permissions. Follow your organization's least-privilege process; do not grant broad administrator access solely to make the example work.
+Allow a short period for IAM propagation before creating the EC2 instance. The identity running the commands needs permission to create and configure the S3 backend bucket, create the EC2 role/profile in this step, read the public AMI parameter (`ssm:GetParameter`), manage the required VPC/EC2/security-group resources, and pass only this EC2 role to the instance (`iam:PassRole`). For the S3 backend it needs bucket listing and state/lockfile object read, write, and lockfile-delete permissions. Scope resource permissions to the test account and resources where practical. Follow your organization's least-privilege process; do not grant broad administrator access solely to make the example work.
 
 ## 5. Set the deployment variables
 
