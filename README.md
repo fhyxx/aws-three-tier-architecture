@@ -81,4 +81,4 @@ Before production use, move the workload into the intended private application t
 
 ## Author
 
-Pelumi Oke Â· AWS Cloud Engineering / Solutions Architecture
+Pelumi Oke · AWS Cloud Engineering / Solutions Architecture
