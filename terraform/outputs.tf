@@ -17,13 +17,3 @@ output "database_subnet_ids" {
   description = "IDs of the database subnets."
   value       = module.network.database_subnet_ids
 }
-
-output "web_test_instance_id" {
-  description = "ID of the EC2 web test instance."
-  value       = module.compute.instance_id
-}
-
-output "web_test_instance_private_ip" {
-  description = "Private IPv4 address of the EC2 web test instance."
-  value       = module.compute.instance_private_ip
-}
