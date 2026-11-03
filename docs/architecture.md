@@ -185,7 +185,7 @@ A database instance has not been provisioned.
 
 Cost-control measures included:
 
-- AWS Budget alert configured at $5
+- AWS Budgets alert configured at $5
 - No NAT Gateway
 - No running RDS database instance
 - Temporary ALB deleted after testing
