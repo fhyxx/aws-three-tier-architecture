@@ -39,7 +39,7 @@ They were subsequently deleted to avoid unnecessary ongoing charges.
 
 The existing EC2 instance and attached EBS volume were preserved.
 
-The application remained accessible directly through the EC2 public IPv4 address.
+At the time of testing, the application was also accessible directly through the EC2 public IPv4 address.
 
 ### 5. Lessons Learned
 
