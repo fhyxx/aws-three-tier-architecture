@@ -15,10 +15,11 @@ The project demonstrates practical knowledge of:
 - Application Load Balancer testing
 - IAM and Systems Manager
 - Infrastructure cost optimization
+- Terraform infrastructure adoption and remote state management
 
 Region: us-east-1 (N. Virginia)
 
-Deployment method: AWS Management Console
+Initial resource deployment: AWS Management Console. Existing resources were subsequently adopted into modular Terraform configuration.
 
 ## 2. Architecture Overview
 
@@ -45,7 +46,7 @@ Components:
 - Dedicated application route table
 - Application security group
 
-A working EC2 web test application was deployed and validated in the public subnet `10.0.1.0/24` (`us-east-1a`), rather than in the intended private application tier. Private-tier deployment remains a future improvement.
+A working EC2 web test application was deployed and validated in the public subnet 10.0.1.0/24 (us-east-1a), rather than in the intended private application tier. Private-tier deployment remains a future improvement.
 
 ### Tier 3: Database
 
@@ -137,13 +138,9 @@ AWS Systems Manager Session Manager provided administrative access without requi
 
 A lightweight Python HTTP application was deployed on an existing Amazon Linux 2023 EC2 instance.
 
-Application directory:
+Application directory: /opt/pelumi-test
 
-/opt/pelumi-test
-
-Service name:
-
-pelumi-test.service
+Service name: pelumi-test.service
 
 The application uses systemd to start automatically and recover from service failures.
 
@@ -173,9 +170,7 @@ The EC2 instance and its attached EBS volume were preserved.
 
 An Amazon RDS subnet group was created.
 
-Name:
-
-pelumi-db-subnet-group
+Name: pelumi-db-subnet-group
 
 Subnets:
 
@@ -201,7 +196,7 @@ AWS Budgets provides alerts and does not automatically impose a hard spending li
 
 ## 11. Project Status
 
-This project demonstrates a configured three-tier network foundation, a working EC2 application, successful temporary ALB integration, and database infrastructure preparation.
+This project demonstrates a configured three-tier network foundation, a working EC2 application, successful temporary ALB integration, database infrastructure preparation, and Terraform management of the existing resources.
 
 It is not represented as a fully deployed, production-ready, highly available three-tier application.
 
@@ -211,6 +206,5 @@ Future improvements may include:
 - Auto Scaling
 - Managed database deployment
 - HTTPS using AWS Certificate Manager
-- Infrastructure as Code
 - Automated CI/CD
 - Enhanced monitoring and observability
