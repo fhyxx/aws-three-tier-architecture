@@ -1,0 +1,158 @@
+# Historical import manifest from the initial Terraform adoption.
+# This file is intentionally named .tf.example and is not loaded by Terraform.
+# It records the resources originally imported into the existing remote state.
+
+import {
+  to = module.network.aws_vpc.main
+  id = "vpc-0d46ffa77fcf6fe05"
+}
+
+import {
+  to = module.network.aws_subnet.public_az1
+  id = "subnet-0458b3703a45586b4"
+}
+
+import {
+  to = module.network.aws_subnet.public_az2
+  id = "subnet-05999216442c5422b"
+}
+
+import {
+  to = module.network.aws_subnet.app_az1
+  id = "subnet-09e408b028a2cf61c"
+}
+
+import {
+  to = module.network.aws_subnet.app_az2
+  id = "subnet-0d84b3f8c1d954226"
+}
+
+import {
+  to = module.network.aws_subnet.db_az1
+  id = "subnet-04099f4c832315a9f"
+}
+
+import {
+  to = module.network.aws_subnet.db_az2
+  id = "subnet-0fce6cd4fc4817c7f"
+}
+
+import {
+  to = module.network.aws_internet_gateway.main
+  id = "igw-04aadab0d69a1e082"
+}
+
+import {
+  to = module.network.aws_route_table.public
+  id = "rtb-0e998bb818cc9de66"
+}
+
+import {
+  to = module.network.aws_route_table.database
+  id = "rtb-0388a6a0ff943560d"
+}
+
+import {
+  to = module.network.aws_route_table.application
+  id = "rtb-0c921a9400b0fb1f9"
+}
+
+import {
+  to = module.network.aws_route_table.unassociated
+  id = "rtb-09136ac50f09702ae"
+}
+
+import {
+  to = module.network.aws_route.public_default
+  id = "rtb-0e998bb818cc9de66_0.0.0.0/0"
+}
+
+import {
+  to = module.network.aws_route_table_association.public_az1
+  id = "subnet-0458b3703a45586b4/rtb-0e998bb818cc9de66"
+}
+
+import {
+  to = module.network.aws_route_table_association.public_az2
+  id = "subnet-05999216442c5422b/rtb-0e998bb818cc9de66"
+}
+
+import {
+  to = module.network.aws_route_table_association.app_az1
+  id = "subnet-09e408b028a2cf61c/rtb-0c921a9400b0fb1f9"
+}
+
+import {
+  to = module.network.aws_route_table_association.app_az2
+  id = "subnet-0d84b3f8c1d954226/rtb-0c921a9400b0fb1f9"
+}
+
+import {
+  to = module.network.aws_route_table_association.db_az1
+  id = "subnet-04099f4c832315a9f/rtb-0388a6a0ff943560d"
+}
+
+import {
+  to = module.network.aws_route_table_association.db_az2
+  id = "subnet-0fce6cd4fc4817c7f/rtb-0388a6a0ff943560d"
+}
+
+import {
+  to = module.security_groups.aws_security_group.alb
+  id = "sg-085e1ddccf8f65750"
+}
+
+import {
+  to = module.security_groups.aws_security_group.app
+  id = "sg-04b2fdb204fcc7138"
+}
+
+import {
+  to = module.security_groups.aws_security_group.db
+  id = "sg-074d9f2b045d44b58"
+}
+
+import {
+  to = module.security_groups.aws_security_group.test_web
+  id = "sg-096de18e85f3941cf"
+}
+
+import {
+  to = module.security_groups.aws_vpc_security_group_ingress_rule.alb_public_http
+  id = "sgr-0e6bfaf88e2f6ab68"
+}
+
+import {
+  to = module.security_groups.aws_vpc_security_group_egress_rule.alb_to_test_web
+  id = "sgr-02601498e84d4a250"
+}
+
+import {
+  to = module.security_groups.aws_vpc_security_group_ingress_rule.app_from_alb
+  id = "sgr-034141b8d79f30a15"
+}
+
+import {
+  to = module.security_groups.aws_vpc_security_group_egress_rule.app_to_db
+  id = "sgr-051fbdc3ca1698014"
+}
+
+import {
+  to = module.security_groups.aws_vpc_security_group_ingress_rule.db_from_app
+  id = "sgr-0eb61687c7ebd964b"
+}
+
+import {
+  to = module.security_groups.aws_vpc_security_group_ingress_rule.test_web_from_ip
+  id = "sgr-03d8a840907fa4395"
+}
+
+import {
+  to = module.security_groups.aws_vpc_security_group_ingress_rule.test_web_from_alb
+  id = "sgr-0c16e7510344d0c03"
+}
+
+import {
+  to = module.compute.aws_instance.web_test
+  id = "i-00753e5b7bc4fce29"
+}

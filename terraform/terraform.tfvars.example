@@ -1,0 +1,4 @@
+# Copy to terraform.tfvars (ignored by Git) and fill in the existing values.
+ami_id                = "REPLACE_WITH_EXISTING_INSTANCE_AMI_ID"
+admin_cidr            = "REPLACE_WITH_EXISTING_ADMIN_CIDR/32"
+instance_profile_name = "pelumi-ec2-ssm-role"
