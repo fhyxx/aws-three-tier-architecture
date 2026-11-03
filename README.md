@@ -72,12 +72,14 @@ The EC2 root volume is encrypted and the instance requires IMDSv2. Session Manag
 
 Before production use, move the workload into the intended private application tier, establish controlled ingress, add HTTPS, monitoring, and application hardening.
 
-## Future Improvements
+## Potential Production Enhancements
 
-- Move the workload into the private application subnet tier.
-- Deploy an ALB as the controlled public entry point when required and budgeted.
-- Add ECS/Fargate deployment and CI/CD.
-- Evaluate Auto Scaling, HTTPS, observability, and a managed database.
+The following are possible extensions to the current portfolio foundation, not claims about features already deployed:
+
+- **Private application tier:** Move the EC2 workload from the public subnet into the private application subnets and design controlled ingress and outbound connectivity appropriate to the workload.
+- **Managed ingress:** Reintroduce an Application Load Balancer when a public entry point is required and the associated cost is justified.
+- **Container delivery:** Containerized CI/CD and an ECS/Fargate deployment are demonstrated separately in [Project 02 — Containerized CI/CD](https://github.com/fhyxx/pelumi-containerized-cicd). They are not part of this project's current deployment.
+- **Additional production capabilities:** Evaluate Auto Scaling, HTTPS with AWS Certificate Manager, observability, and a managed database according to application requirements.
 
 ## Author
 
