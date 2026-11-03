@@ -32,7 +32,7 @@ terraform version
 aws --version
 ```
 
-Confirm that the returned AWS account ID is **your own account** before continuing. Do not use the `portfolio` profile or credentials belonging to the repository owner.
+Confirm that the returned AWS account ID is **your own account** before continuing. Use a profile that authenticates to the account where you are authorized to create the test resources. If you are the repository owner and `portfolio` is your own authorized profile, you may use it after verifying the account ID with `aws sts get-caller-identity`. Never use credentials belonging to another person or point this deployment at the repository owner's existing state bucket.
 
 If your organization uses another approved credential mechanism, configure that instead. Do not put access keys in Terraform files, `terraform.tfvars`, or the repository.
 
@@ -214,7 +214,16 @@ For your own disposable copy only, after confirming the AWS profile and backend 
 2. Confirm the plan contains only resources in your own test account and state.
 3. Run `terraform destroy` only after that review.
 4. Confirm the EC2 instance, VPC, subnets, route tables, Internet Gateway, and security groups have been removed.
-5. Retain the S3 state bucket until you no longer need the state history. If you choose to remove it, empty all object versions and delete it separately after confirming it contains no state you need.
+5. Remove the test IAM instance profile and role created in section 4, after Terraform has destroyed the EC2 instance:
+
+```powershell
+aws iam remove-role-from-instance-profile --instance-profile-name project01-ec2-ssm-profile --role-name project01-ec2-ssm-role
+aws iam delete-instance-profile --instance-profile-name project01-ec2-ssm-profile
+aws iam detach-role-policy --role-name project01-ec2-ssm-role --policy-arn arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+aws iam delete-role --role-name project01-ec2-ssm-role
+```
+
+6. Retain the S3 state bucket until you no longer need the state history. If you choose to remove it, empty all object versions and delete it separately after confirming it contains no state you need.
 
 Never remove the protection guards or run destroy commands against the repository owner's backend or AWS account.
 
