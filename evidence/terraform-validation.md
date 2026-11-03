@@ -3,7 +3,7 @@
 **Validation date:** November 2, 2026  
 **AWS region:** `us-east-1`
 
-This record captures the checks performed after replacing the EC2 root EBS volume with an encrypted volume and reconciling the Terraform configuration.
+This record captures the November 2, 2026 checks performed after replacing the EC2 root EBS volume with an encrypted volume. It documents the earlier Terraform baseline and EC2 validation; the modular Terraform refactor was separately validated on November 3, 2026, as recorded in the repository README and Terraform operations guide.
 
 ## Terraform
 

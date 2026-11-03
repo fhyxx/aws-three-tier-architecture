@@ -122,7 +122,7 @@ Associated with both database subnets.
 
 No NAT Gateway was deployed.
 
-This decision reduced infrastructure costs while maintaining private subnet isolation.
+This avoided NAT Gateway charges and left the application and database subnets without a default route to the internet. As a result, workloads in those subnets do not have direct internet egress unless a separate egress path is added.
 
 ## 6. Security Architecture
 
@@ -185,7 +185,7 @@ A database instance has not been provisioned.
 
 Cost-control measures included:
 
-- AWS Budget alert configured at $5
+- AWS Budgets alert configured at $5
 - No NAT Gateway
 - No running RDS database instance
 - Temporary ALB deleted after testing

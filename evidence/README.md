@@ -12,7 +12,7 @@ These screenshots and validation records document AWS configuration and implemen
 | [instance ed.png](instance%20ed.png) | EC2 instance configuration |
 | [Screenshot (203).png](Screenshot%20%28203%29.png) | Application/browser evidence |
 | [Session manager.png](Session%20manager.png) | Session Manager / instance validation |
-| [10-aws-budget-control.png](10-aws-budget-control.png) | AWS Budget alert configuration |
+| [10-aws-budget-control.png](10-aws-budget-control.png) | AWS Budgets alert configuration |
 | [Terraform validation](terraform-validation.md) | Terraform plan, EBS encryption, HTTP response, and SSM validation |
 
 ## Interpretation and Limitations
@@ -21,5 +21,5 @@ These screenshots and validation records document AWS configuration and implemen
 - No RDS database instance or NAT Gateway was launched.
 - An RDS subnet group was prepared, but a screenshot of it is not currently indexed here.
 - The EC2 test instance is in a public subnet.
-- The $5 AWS Budget is an alert, not a hard spending cap.
+- The $5 AWS Budgets alert is not a hard spending cap.
 - The Terraform and EC2 validation record describes results observed on November 2, 2026.
