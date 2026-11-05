@@ -5,6 +5,7 @@ resource "aws_instance" "web_test" {
   vpc_security_group_ids = var.security_group_ids
 
   iam_instance_profile = var.instance_profile_name
+  user_data            = var.user_data
 
   associate_public_ip_address = true
   monitoring                  = false
