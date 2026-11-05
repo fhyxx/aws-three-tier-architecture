@@ -1,18 +1,19 @@
 # Independent Deployment Guide (Fresh AWS Account)
 
-This guide is for a technically competent engineer reproducing the project in **their own AWS account**. It is deliberately separate from the existing-deployment workflow: use a new state bucket and a dedicated AWS profile. Never point a fresh deployment at Pelumi's S3 bucket or state key.
+This guide is for an engineer reproducing the project in **their own AWS account**. It is deliberately separate from the existing-deployment workflow: use a new state bucket and a dedicated AWS profile. Never point a fresh deployment at Pelumi's S3 bucket or state key.
 
-> **Important:** This is a portfolio test environment, not a production architecture. It creates a VPC, six subnets, route tables, security groups, and one public `t3.micro` EC2 instance with an encrypted 8 GiB gp3 root volume. It does not create an ALB, NAT Gateway, or RDS database instance. The EC2 test application is installed separately through Systems Manager in the steps below.
+> **Important:** This is a cost-conscious portfolio test environment, not a production architecture. It creates a VPC, six subnets, route tables, security groups, and one public `t3.micro` EC2 instance with an encrypted 8 GiB gp3 root volume. The EC2 test application is installed and started automatically by EC2 user-data during first boot. It does not create an ALB, NAT Gateway, or RDS database instance.
 
 ## 1. What you need
 
 - An AWS account where you are authorized to create VPC, EC2, security-group, IAM instance-profile, and S3 resources.
-- AWS CLI v2, the AWS Systems Manager Session Manager plugin, and Terraform 1.10.0 or later.
+- AWS CLI v2, Terraform 1.10.0 or later, and an internet connection for package installation during first boot.
 - PowerShell 7 or Windows PowerShell 5.1 (commands below use PowerShell syntax).
 - An AWS CLI profile for your own account. AWS IAM Identity Center/SSO is preferred.
 - A globally unique S3 bucket name for your Terraform state.
+- An administrator public IPv4 address for the temporary direct HTTP ingress rule.
 
-The Terraform provider is constrained to AWS provider `~> 6.0`; the committed lock file currently selects version `6.71.0`. The configuration is pinned to Availability Zones `us-east-1a` and `us-east-1b` and defaults to region `us-east-1`.
+The Terraform provider is constrained to AWS provider `~> 6.0`; the committed lock file selects version `6.71.0`. The configuration is pinned to Availability Zones `us-east-1a` and `us-east-1b` and defaults to region `us-east-1`.
 
 ## 2. Clone and authenticate
 
@@ -91,7 +92,7 @@ Retrieve the current Amazon Linux 2023 x86-64 AMI ID from AWS Systems Manager Pa
 
 ```powershell
 $AMI_ID = aws ssm get-parameter --name /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64 --region $AWS_REGION --query Parameter.Value --output text
-$ADMIN_CIDR = "$( (Invoke-RestMethod -Uri 'https://checkip.amazonaws.com').Trim() )/32"
+$ADMIN_CIDR = "$((Invoke-RestMethod -Uri 'https://checkip.amazonaws.com').Trim())/32"
 
 Copy-Item .\terraform.tfvars.example .\terraform.tfvars
 @"
@@ -103,7 +104,7 @@ instance_profile_name = "project01-ec2-ssm-profile"
 Get-Content .\terraform.tfvars
 ```
 
-Review the generated values. `admin_cidr` is used for temporary direct HTTP access to the test instance. If your public IP changes, update it and review the resulting plan before applying.
+Review the generated values. `admin_cidr` is used for temporary direct HTTP access to the test instance. If your public IP changes, update it and review the resulting plan before applying. Do not publish your administrator IP address in screenshots, logs, or repository files.
 
 ## 6. Initialize, validate, and plan
 
@@ -117,7 +118,7 @@ terraform plan -out=project01.tfplan
 terraform show project01.tfplan
 ```
 
-The fresh-account plan should propose creating the project resources in **your** account. It should not show changes to resources in another account or reference the repository owner's S3 state. Review the plan for region, CIDRs, IAM profile, public IP assignment, and cost implications before applying.
+The fresh-account plan should propose creating the project resources in **your** account. It should not show changes to resources in another account or reference the repository owner's S3 state. Review the plan for region, CIDRs, IAM profile, public IP assignment, user-data, and cost implications before applying.
 
 For this independent deployment only, after reviewing the plan:
 
@@ -136,59 +137,60 @@ aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[0].
 
 If Terraform reports an error, stop and resolve it before retrying. Do not switch to the repository owner's backend to work around an error.
 
-## 7. Install and verify the web test application
+## 7. Verify automatic EC2 user-data bootstrap
 
-Wait until the EC2 instance is registered as an online Systems Manager managed node:
+The application is intended to be installed and started by the EC2 user-data script during first boot. **Do not manually install packages, create the application files, or start/restart the service before recording the first-boot result.** Doing so would invalidate the bootstrap test.
+
+First wait until the EC2 instance is registered as an online Systems Manager managed node:
 
 ```powershell
 aws ssm describe-instance-information --filters "Key=InstanceIds,Values=$INSTANCE_ID" --query 'InstanceInformationList[0].[PingStatus,PlatformName]' --output table
 ```
 
-When the instance reports `Online`, start a Session Manager shell:
+When the instance reports `Online`, use Session Manager or a read-only Systems Manager Run Command to inspect the instance. SSM is an inspection and troubleshooting channel here; it is not the installation mechanism.
 
-```powershell
-aws ssm start-session --target $INSTANCE_ID --region $AWS_REGION
-```
-
-In the Linux session, install and configure the same lightweight Python HTTP test application documented by this project:
+On the EC2 instance, check the user-data copy and cloud-init result:
 
 ```bash
-sudo dnf install -y python3
-sudo mkdir -p /opt/pelumi-test
-echo '<html><body><h1>AWS Three-Tier Architecture</h1><p>EC2 web test application is running.</p></body></html>' | sudo tee /opt/pelumi-test/index.html
+# Confirm that EC2 received non-empty user-data without printing the script.
+TOKEN=$(curl -fsS -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 60")
+curl -fsS -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/user-data/ | wc -c
+sudo wc -c /var/lib/cloud/instance/user-data.txt
 
-sudo tee /etc/systemd/system/pelumi-test.service > /dev/null <<'EOF'
-[Unit]
-Description=Pelumi EC2 Test Web Application
-After=network.target
-
-[Service]
-Type=simple
-User=nobody
-Group=nobody
-AmbientCapabilities=CAP_NET_BIND_SERVICE
-WorkingDirectory=/opt/pelumi-test
-ExecStart=/usr/bin/python3 -m http.server 80 --directory /opt/pelumi-test
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo systemctl daemon-reload
-sudo systemctl enable --now pelumi-test.service
-sudo systemctl is-active pelumi-test.service
-curl -I --max-time 5 http://127.0.0.1/
+# Inspect cloud-init completion and relevant setup output.
+sudo cloud-init status --long
+sudo tail -n 80 /var/log/cloud-init.log
+sudo tail -n 80 /var/log/cloud-init-output.log
+sudo tail -n 80 /var/log/pelumi-setup.log
 ```
 
-Exit the Session Manager session, then from PowerShell verify external HTTP access from the administrator IP configured in `admin_cidr`:
+Then verify the service and local HTTP endpoint:
+
+```bash
+sudo systemctl is-enabled pelumi-test.service
+sudo systemctl is-active pelumi-test.service
+sudo systemctl status pelumi-test.service --no-pager
+sudo ss -lntp | grep ':80'
+curl -i --max-time 5 http://127.0.0.1/
+```
+
+Expected results:
+
+- The metadata and saved user-data copies are non-empty and have matching byte counts.
+- Cloud-init reports completion.
+- `pelumi-test.service` is enabled and active/running.
+- A process is listening on TCP port 80.
+- The local HTTP response is `200` and contains the expected AWS Three-Tier Architecture test page.
+
+Finally, from PowerShell, verify external HTTP access:
 
 ```powershell
 Invoke-WebRequest -Uri "http://$PUBLIC_IP/" -UseBasicParsing
 ```
 
-Expected result: HTTP 200 and the test page content. This reproduces the simple EC2 web test workload; it does not deploy an ALB or a database.
+Expected result: HTTP 200 and the test page content. If the local request succeeds but the external request fails, check the instance public IP, security-group ingress source, and whether your public IP still matches `admin_cidr`.
+
+**Do not repair the instance before capturing the failed first-boot evidence.** If user-data or cloud-init fails, preserve the relevant logs and diagnose the cause. A manual installation through SSM may be useful as a separate troubleshooting experiment, but it must not be reported as a successful automatic-bootstrap test.
 
 ## 8. Understand the architecture and boundaries
 
@@ -232,9 +234,13 @@ Never remove the protection guards or run destroy commands against the repositor
 - **S3 AccessDenied during init:** verify the selected profile, bucket name, region, and S3 permissions for state read/write and lockfile operations.
 - **IAM PassRole error:** verify the caller can pass `project01-ec2-ssm-role` to EC2.
 - **SSM node does not become Online:** verify the instance profile has `AmazonSSMManagedInstanceCore`, the instance has outbound HTTPS connectivity, and the AWS region/profile are correct.
+- **Cloud-init reports failure:** inspect `cloud-init status --long`, `/var/log/cloud-init.log`, `/var/log/cloud-init-output.log`, and `/var/log/pelumi-setup.log` before making changes.
+- **Service is missing or inactive:** preserve the first-boot evidence, inspect `systemctl status pelumi-test.service` and the setup log, and diagnose the user-data failure. Do not manually create the service and then claim the bootstrap test passed.
 - **AMI not found:** rerun the Parameter Store lookup in `us-east-1` and confirm the returned AMI architecture is x86-64.
 - **HTTP timeout:** confirm the instance is running, the test service is active, the public IP is correct, and your current public IP still matches `admin_cidr`.
 
 ## 11. What successful reproduction proves
 
-A successful run demonstrates that another engineer can authenticate to an independent AWS account, create a separate remote state backend, prepare the required EC2 instance role, initialize and validate the Terraform configuration, review and apply a fresh-account plan, deploy the EC2 test application through Systems Manager, and verify HTTP 200 without access to the repository owner's AWS account or state.
+A successful run demonstrates that another engineer can authenticate to an independent AWS account, create a separate remote state backend, prepare the required EC2 instance role, initialize and validate the Terraform configuration, review and apply a fresh-account plan, and have EC2 user-data automatically install and start the test application on first boot. The engineer can then verify the service and HTTP 200 response without manually installing or repairing the application through SSM.
+
+This reproduction demonstrates a working network foundation and EC2 bootstrap path. It does not demonstrate a fully deployed production three-tier application, ALB, NAT Gateway, or RDS database.
