@@ -60,7 +60,7 @@ Copy-Item .\backend.hcl.example .\backend.hcl
 notepad .\backend.hcl
 ```
 
-Set its values to your bucket, `us-east-1`, and `project01`. The file is git-ignored. Do not commit it.
+Set its values to your bucket, a new key such as `project01-independent/terraform.tfstate`, `us-east-1`, and `project01`. The bucket and key together identify this deployment's state; never reuse the repository owner's bucket or key. The file is git-ignored. Do not commit it.
 
 ## 4. Create the EC2 Systems Manager instance profile
 
