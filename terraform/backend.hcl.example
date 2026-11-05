@@ -1,6 +1,7 @@
 # Copy to backend.hcl (ignored by Git).
-# Path A: set the original state bucket and the portfolio AWS profile.
-# Path B: set your own state bucket and your own AWS CLI profile.
+# Path A: use the exact bucket, key, region, and profile for the existing state.
+# Path B: use your own bucket, a new key, region, and your own AWS CLI profile.
 bucket  = "REPLACE_WITH_YOUR_TERRAFORM_STATE_BUCKET"
+key     = "REPLACE_WITH_EXISTING_OR_NEW_STATE_KEY"
 region  = "us-east-1"
 profile = "REPLACE_WITH_YOUR_AWS_PROFILE"
