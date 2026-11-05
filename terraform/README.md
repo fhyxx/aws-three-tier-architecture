@@ -13,6 +13,7 @@ Use this path only when you are the owner/operator of the existing AWS environme
 - Terraform 1.10.0 or later
 - AWS CLI credentials for the existing AWS account
 - Access to the existing S3 Terraform state bucket and its lockfile
+- The exact existing backend bucket **and state key**
 - The existing EC2 AMI ID, administrator CIDR, and IAM instance profile name
 
 Copy the examples:
@@ -20,7 +21,7 @@ Copy the examples:
     Copy-Item backend.hcl.example backend.hcl
     Copy-Item terraform.tfvars.example terraform.tfvars
 
-Edit the local files with the **existing deployment's** values. The files are ignored by Git.
+Edit the local files with the **existing deployment's** values. In `backend.hcl`, set the exact bucket, key, region, and profile that own the existing Terraform state. Do not rely on the default key in `versions.tf`; a different key creates a separate, empty state. The files are ignored by Git.
 
 For the existing AWS CLI profile:
 
@@ -43,6 +44,8 @@ Do not run `terraform apply` or `terraform destroy` against the existing deploym
 If you are a new user or reviewer, **do not use the existing portfolio backend**. Clone the repository, configure your own AWS CLI profile, create a separate S3 state bucket, create the EC2 Systems Manager role/profile, and populate fresh-account variables.
 
 Follow the complete [Independent Fresh-Account Deployment Guide](../docs/independent-deployment-guide.md). It includes credential setup, remote-state bucket configuration, IAM prerequisites, AMI lookup, validation and planning, deployment, **automatic EC2 user-data bootstrap verification**, cost cautions, and cleanup boundaries.
+
+For this path, set a new, unique state key in your local `backend.hcl` as well as your own bucket and profile. Never reuse the repository owner's bucket or state key.
 
 The EC2 user-data script installs Python, creates the lightweight test page and systemd unit, and enables/starts `pelumi-test.service` during first boot. For the bootstrap test, use Systems Manager only to inspect user-data delivery, cloud-init, setup logs, service health, and HTTP response. Do not manually install or repair the application before recording the first-boot result.
 
