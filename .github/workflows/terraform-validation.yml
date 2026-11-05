@@ -39,3 +39,6 @@ jobs:
 
       - name: Validate configuration
         run: terraform validate
+
+      - name: Check user-data shell syntax
+        run: bash -n modules/compute/user_data.sh
