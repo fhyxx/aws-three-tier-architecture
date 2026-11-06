@@ -83,8 +83,16 @@ The isolated test created the VPC, six subnets, route tables, Internet Gateway, 
 
 The application instance was placed in a public subnet for this test. This is a reproducibility and bootstrap test, not a claim of a complete production three-tier application.
 
+## Cleanup of the original failed deployment
+
+On 2026-11-06, the separately managed original failed deployment was retired using its reviewed 32-resource Terraform destroy plan. Terraform reported 0 resources added, 0 changed, and 32 destroyed; the original cleanup workspace's state now lists no managed resources.
+
+Read-only post-cleanup checks confirmed that the shared S3 backend bucket and shared IAM instance profile and role remain in place. The fresh test instance remained running in its isolated VPC, with both EC2 system and instance status checks reporting `ok`.
+
+This cleanup did not target the fresh test deployment.
+
 ## Evidence quality and limitations
 
 This file is a sanitized summary of previously observed Terraform, EC2, SSM, cloud-init, systemd, and HTTP results. It is not a raw command transcript or a screenshot bundle. No credentials, SSO tokens, administrator IP address, or full user-data script are included.
 
-The checks are point-in-time observations from 2026-11-05, not a live uptime guarantee. The fresh test deployment is distinct from the original deployment; neither deployment should be assumed to have been cleaned up.
+The bootstrap and HTTP checks are point-in-time observations from 2026-11-05, not a live uptime guarantee. The original failed deployment was retired on 2026-11-06. The fresh test deployment remains separate and was confirmed running with healthy EC2 status checks after that cleanup; its application HTTP endpoint was not rechecked as part of the cleanup verification.
