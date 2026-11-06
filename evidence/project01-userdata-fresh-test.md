@@ -87,7 +87,7 @@ The application instance was placed in a public subnet for this test. This is a 
 
 On 2026-11-06, the separately managed original failed deployment was retired using its reviewed 32-resource Terraform destroy plan. Terraform reported 0 resources added, 0 changed, and 32 destroyed; the original cleanup workspace's state now lists no managed resources.
 
-Read-only post-cleanup checks confirmed that the shared S3 backend bucket and shared IAM instance profile and role remain in place. The fresh test instance remained running in its isolated VPC, with both EC2 system and instance status checks reporting `ok`.
+Read-only post-cleanup checks confirmed that the shared S3 backend bucket and shared IAM instance profile and role remain in place. The fresh test instance remained running in its isolated VPC, with both EC2 system and instance status checks reporting `ok`. A read-only external HTTP request after cleanup returned HTTP 200 with the expected test application response.
 
 This cleanup did not target the fresh test deployment.
 
@@ -95,4 +95,4 @@ This cleanup did not target the fresh test deployment.
 
 This file is a sanitized summary of previously observed Terraform, EC2, SSM, cloud-init, systemd, and HTTP results. It is not a raw command transcript or a screenshot bundle. No credentials, SSO tokens, administrator IP address, or full user-data script are included.
 
-The bootstrap and HTTP checks are point-in-time observations from 2026-11-05, not a live uptime guarantee. The original failed deployment was retired on 2026-11-06. The fresh test deployment remains separate and was confirmed running with healthy EC2 status checks after that cleanup; its application HTTP endpoint was not rechecked as part of the cleanup verification.
+The bootstrap checks and HTTP responses are point-in-time observations, not a live uptime guarantee. The original failed deployment was retired on 2026-11-06. The fresh test deployment remains separate and was confirmed running with healthy EC2 status checks after that cleanup; its HTTP endpoint was also rechecked after cleanup and returned HTTP 200.
