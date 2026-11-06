@@ -30,7 +30,7 @@ The VPC contains public, application, and database subnets in `us-east-1a` and `
 
 The existing AWS resources were adopted into a modular Terraform configuration organized around networking, security groups, and compute. Module inputs use Terraform outputs and variables rather than embedding VPC, subnet, and security-group IDs throughout the configuration.
 
-The original portfolio deployment used the S3 bucket and key configured locally through the ignored `terraform/backend.hcl` file. Its reviewed cleanup completed on 2026-11-06, and the current Terraform state lists no managed resources. The shared S3 backend bucket remains in place. The backend uses encryption and native S3 state locking with `use_lockfile = true`. Do not commit backend configuration, variable files, state, credentials, or plan files.
+The failed duplicate deployment used the S3 bucket and key configured locally through the ignored `terraform/backend.hcl` file. Its reviewed cleanup completed on 2026-11-06, and that cleanup workspace's current Terraform state lists no managed resources. The shared S3 backend bucket remains in place. The backend uses encryption and native S3 state locking with `use_lockfile = true`. Do not commit backend configuration, variable files, state, credentials, or plan files.
 
 **New users must not point Terraform at the existing deployment's state.** The [Independent Fresh-Account Deployment Guide](docs/independent-deployment-guide.md) explains how to create a separate S3 backend, configure credentials and IAM prerequisites in your own AWS account, validate and plan a fresh deployment, and verify automatic EC2 user-data bootstrap. The two workflows are intentionally separate.
 
@@ -44,18 +44,18 @@ The original import declarations are retained as migration history under `terraf
 | Internet Gateway and public route | Configured |
 | Separate route tables by tier | Configured |
 | Security groups | Configured |
-| Original EC2 web test application | HTTP `200 OK` verified on 2026-11-02; original instance retired on 2026-11-06 |
-| Independent EC2 user-data bootstrap | Fresh isolated deployment; cloud-init completed, systemd service active, local and external HTTP `200 OK` verified on 2026-11-05; after the original cleanup on 2026-11-06, the instance remained healthy and returned HTTP `200 OK` |
+| Baseline EC2 web test application | HTTP `200 OK` verified on 2026-11-02; instance remained running with both EC2 status checks `ok` after the separate cleanup on 2026-11-06; HTTP was not rechecked then |
+| Failed duplicate deployment | 32 resources destroyed on 2026-11-06; cleanup Terraform state lists no managed resources |\n| Independent EC2 user-data bootstrap | Fresh isolated deployment; cloud-init completed, systemd service active, local and external HTTP `200 OK` verified on 2026-11-05; after the separate cleanup on 2026-11-06, the instance remained healthy and returned HTTP `200 OK` |
 | systemd service | Previously confirmed active and enabled on the original instance; reboot persistence validated |
 | Systems Manager | Original instance reported `Online` on 2026-11-02; isolated test instance reported `Online` on 2026-11-05 |
-| Original EC2 root EBS volume | Encrypted gp3 volume; retired with the original instance on 2026-11-06 |
+| Baseline EC2 root EBS volume | Encrypted gp3 volume; documented in-use during 2026-11-02 validation |
 | Terraform refactor | `fmt -check`, `validate`, 32-resource state inventory, and zero-change plan completed on 2026-11-03 |
 | Application Load Balancer and target group | Tested successfully, then deleted |
-| RDS subnet group | Created in the original environment |
+| RDS subnet group | Remains in the baseline VPC; no RDS database instance was listed |
 | RDS database instance | Not deployed |
 | NAT Gateway | Not deployed |
 
-The November 2, 3, and 5 application and Terraform checks are point-in-time evidence, not a live uptime guarantee. On November 3, 2026, the modular Terraform refactor passed formatting, validation, a 32-resource state inventory check, and a plan against the existing S3 backend with no infrastructure or state changes. On November 5, a separate isolated fresh deployment created 32 resources and verified automatic EC2 user-data bootstrap and HTTP 200. On November 6, the original failed deployment was retired: its reviewed Terraform plan destroyed 32 resources, the cleanup state now lists no managed resources, and the shared backend bucket and IAM instance profile/role remain. The fresh test instance remained running with healthy EC2 status checks after cleanup, and a read-only HTTP request returned `200 OK` with the expected page content. See [Terraform and EC2 validation evidence](evidence/terraform-validation.md) and [isolated fresh user-data test evidence](evidence/project01-userdata-fresh-test.md).
+The November 2, 3, and 5 application and Terraform checks are point-in-time evidence, not a live uptime guarantee. On November 3, 2026, the modular Terraform refactor passed formatting, validation, a 32-resource state inventory check, and a plan against the existing S3 backend with no infrastructure or state changes. On November 5, a separate isolated fresh deployment created 32 resources and verified automatic EC2 user-data bootstrap and HTTP 200. On November 6, the failed duplicate deployment was retired: its reviewed Terraform plan destroyed 32 resources, its cleanup state lists no managed resources, and the shared backend bucket and IAM instance profile/role remain. The separate baseline EC2 instance and RDS subnet group were outside that plan and remain; the baseline instance was running with healthy EC2 status checks, and no RDS database instance was listed. The fresh test instance also remained healthy and returned `200 OK` after cleanup. See [Terraform and EC2 validation evidence](evidence/terraform-validation.md) and [isolated fresh user-data test evidence](evidence/project01-userdata-fresh-test.md). See [Terraform and EC2 validation evidence](evidence/terraform-validation.md) and [isolated fresh user-data test evidence](evidence/project01-userdata-fresh-test.md).
 
 ## Technical Documentation
 
@@ -73,7 +73,7 @@ The November 2, 3, and 5 application and Terraform checks are point-in-time evid
 
 The configured $5 AWS Budgets alert is **not a hard spending cap**. EC2 and EBS may continue to incur charges while resources exist, and billing data can be delayed.
 
-The EC2 root volume is encrypted and the instance requires IMDSv2. Session Manager is used for administrative access rather than relying on publicly exposed SSH. The original test instance used a public subnet and was retired on 2026-11-06. The isolated fresh test instance remains in a public subnet, with direct HTTP ingress restricted to the administrator CIDR. This is a temporary test configuration, not a production security posture.
+The EC2 root volume is encrypted and the instance requires IMDSv2. Session Manager is used for administrative access rather than relying on publicly exposed SSH. The baseline EC2 instance and the isolated fresh test instance remain in public subnets. The separate failed duplicate's instance was retired on 2026-11-06. These are temporary test configurations, not a production security posture.
 
 Before production use, move the workload into the intended private application tier, establish controlled ingress, add HTTPS, monitoring, and application hardening.
 
