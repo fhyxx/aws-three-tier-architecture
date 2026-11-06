@@ -45,7 +45,7 @@ The original import declarations are retained as migration history under `terraf
 | Separate route tables by tier | Configured |
 | Security groups | Configured |
 | Original EC2 web test application | HTTP `200 OK` verified on 2026-11-02; original instance retired on 2026-11-06 |
-| Independent EC2 user-data bootstrap | Fresh isolated deployment; cloud-init completed, systemd service active, local and external HTTP `200 OK` verified on 2026-11-05; instance remained running with healthy EC2 status checks after the original cleanup on 2026-11-06 |
+| Independent EC2 user-data bootstrap | Fresh isolated deployment; cloud-init completed, systemd service active, local and external HTTP `200 OK` verified on 2026-11-05; after the original cleanup on 2026-11-06, the instance remained healthy and returned HTTP `200 OK` |
 | systemd service | Previously confirmed active and enabled on the original instance; reboot persistence validated |
 | Systems Manager | Original instance reported `Online` on 2026-11-02; isolated test instance reported `Online` on 2026-11-05 |
 | Original EC2 root EBS volume | Encrypted gp3 volume; retired with the original instance on 2026-11-06 |
@@ -55,7 +55,7 @@ The original import declarations are retained as migration history under `terraf
 | RDS database instance | Not deployed |
 | NAT Gateway | Not deployed |
 
-The November 2, 3, and 5 application and Terraform checks are point-in-time evidence, not a live uptime guarantee. On November 3, 2026, the modular Terraform refactor passed formatting, validation, a 32-resource state inventory check, and a plan against the existing S3 backend with no infrastructure or state changes. On November 5, a separate isolated fresh deployment created 32 resources and verified automatic EC2 user-data bootstrap and HTTP 200. On November 6, the original failed deployment was retired: its reviewed Terraform plan destroyed 32 resources, the cleanup state now lists no managed resources, and the shared backend bucket and IAM instance profile/role remain. The fresh test instance was still running with healthy EC2 status checks after cleanup; its HTTP endpoint was not rechecked. See [Terraform and EC2 validation evidence](evidence/terraform-validation.md) and [isolated fresh user-data test evidence](evidence/project01-userdata-fresh-test.md).
+The November 2, 3, and 5 application and Terraform checks are point-in-time evidence, not a live uptime guarantee. On November 3, 2026, the modular Terraform refactor passed formatting, validation, a 32-resource state inventory check, and a plan against the existing S3 backend with no infrastructure or state changes. On November 5, a separate isolated fresh deployment created 32 resources and verified automatic EC2 user-data bootstrap and HTTP 200. On November 6, the original failed deployment was retired: its reviewed Terraform plan destroyed 32 resources, the cleanup state now lists no managed resources, and the shared backend bucket and IAM instance profile/role remain. The fresh test instance remained running with healthy EC2 status checks after cleanup, and a read-only HTTP request returned `200 OK` with the expected page content. See [Terraform and EC2 validation evidence](evidence/terraform-validation.md) and [isolated fresh user-data test evidence](evidence/project01-userdata-fresh-test.md).
 
 ## Technical Documentation
 
