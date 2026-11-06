@@ -20,8 +20,8 @@ These screenshots and validation records document AWS configuration and implemen
 
 - The temporary Application Load Balancer and target group in the original environment were tested and subsequently deleted.
 - No RDS database instance or NAT Gateway was launched in either the original environment or the isolated fresh test.
-- The `pelumi-db-subnet-group` remains in the baseline VPC; no RDS database instances were listed.
-- The 32-resource failed duplicate deployment was retired on 2026-11-06. A separate baseline EC2 instance and its VPC remain; the instance was running with both EC2 status checks `ok` after cleanup. The fresh isolated EC2 instance also remains and returned HTTP 200 after cleanup.
+- The `pelumi-db-subnet-group` was not found in the November 6, 2026 audit; no RDS database instance was deployed.
+- The 32-resource failed duplicate deployment was retired on 2026-11-06. The baseline VPC (`vpc-0d46ffa77fcf6fe05`) remains available but has no subnets, attached internet gateway, or network interfaces; its only route table contains the VPC-local route. The baseline EC2 instance (`i-00753e5b7bc4fce29`) was found terminated, and the baseline RDS subnet group was not found. The separate fresh isolated EC2 instance (`i-00d00ff42e0b0d31a`) remains running with both EC2 status checks `ok`; an external HTTP request returned HTTP 200 on November 6.
 - The $5 AWS Budgets alert is not a hard spending cap.
 - The Terraform and original EC2 validation record describes results observed on November 2, 2026.
 - The isolated fresh user-data test record describes point-in-time results observed on November 5, 2026. It is separate from the original deployment and its Terraform state.
