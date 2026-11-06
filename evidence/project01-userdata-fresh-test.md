@@ -89,7 +89,7 @@ On 2026-11-06, the separately managed original failed deployment was retired usi
 
 Read-only post-cleanup checks confirmed that the shared S3 backend bucket and shared IAM instance profile and role remain in place. The fresh test instance remained running in its isolated VPC, with both EC2 system and instance status checks reporting `ok`. A read-only external HTTP request after cleanup returned HTTP 200 with the expected test application response.
 
-This cleanup did not target the fresh test deployment.
+This cleanup did not target the fresh test deployment. A separate baseline deployment was also outside the 32-resource plan and was left unchanged: AWS showed its EC2 instance (`i-00753e5b7bc4fce29`) still running in VPC `vpc-0d46ffa77fcf6fe05`, with both EC2 status checks `ok`. The `pelumi-db-subnet-group` RDS subnet group remains in that VPC; no RDS DB instances were listed. The baseline instance's HTTP endpoint was not rechecked after cleanup.
 
 ## Evidence quality and limitations
 
