@@ -44,19 +44,19 @@ The original import declarations are retained as migration history under `terraf
 | Internet Gateway and public route | Configured |
 | Separate route tables by tier | Configured |
 | Security groups | Configured |
-| Baseline EC2 web test application | HTTP `200 OK` verified on 2026-11-02; instance remained running with both EC2 status checks `ok` after the separate cleanup on 2026-11-06; HTTP was not rechecked then |
+| Baseline EC2 web test application | HTTP `200 OK` verified on 2026-11-02; instance was found `terminated` in the 2026-11-06 audit |
 | Failed duplicate deployment | 32 resources destroyed on 2026-11-06; cleanup Terraform state lists no managed resources |
-| Independent EC2 user-data bootstrap | Fresh isolated deployment; cloud-init completed, systemd service active, local and external HTTP `200 OK` verified on 2026-11-05; after the separate cleanup on 2026-11-06, the instance remained healthy and returned HTTP `200 OK` |
+| Independent EC2 user-data bootstrap | Fresh isolated deployment; cloud-init completed, systemd service active, and local/external HTTP `200 OK` verified on 2026-11-05; EC2 checks and external HTTP `200 OK` reconfirmed on 2026-11-06 |
 | systemd service | Previously confirmed active and enabled on the original instance; reboot persistence validated |
 | Systems Manager | Original instance reported `Online` on 2026-11-02; isolated test instance reported `Online` on 2026-11-05 |
 | Baseline EC2 root EBS volume | Encrypted gp3 volume; documented in-use during 2026-11-02 validation |
 | Terraform refactor | `fmt -check`, `validate`, 32-resource state inventory, and zero-change plan completed on 2026-11-03 |
 | Application Load Balancer and target group | Tested successfully, then deleted |
-| RDS subnet group | Remains in the baseline VPC; no RDS database instance was listed |
+| RDS subnet group | `pelumi-db-subnet-group` not found in the 2026-11-06 audit |
 | RDS database instance | Not deployed |
 | NAT Gateway | Not deployed |
 
-The November 2, 3, and 5 application and Terraform checks are point-in-time evidence, not a live uptime guarantee. On November 3, 2026, the modular Terraform refactor passed formatting, validation, a 32-resource state inventory check, and a plan against the existing S3 backend with no infrastructure or state changes. On November 5, a separate isolated fresh deployment created 32 resources and verified automatic EC2 user-data bootstrap and HTTP 200. On November 6, the failed duplicate deployment was retired: its reviewed Terraform plan destroyed 32 resources, its cleanup state lists no managed resources, and the shared backend bucket and IAM instance profile/role remain. The separate baseline EC2 instance and RDS subnet group were outside that plan and remain; the baseline instance was running with healthy EC2 status checks, and no RDS database instance was listed. The fresh test instance also remained healthy and returned `200 OK` after cleanup. See [Terraform and EC2 validation evidence](evidence/terraform-validation.md) and [isolated fresh user-data test evidence](evidence/project01-userdata-fresh-test.md).
+The November 2, 3, and 5 application and Terraform checks are point-in-time evidence, not a live uptime guarantee. On November 3, 2026, the modular Terraform refactor passed formatting, validation, a 32-resource state inventory check, and a plan against the existing S3 backend with no infrastructure or state changes. On November 5, a separate isolated fresh deployment created 32 resources and verified automatic EC2 user-data bootstrap and HTTP 200. On November 6, the failed duplicate deployment was retired: its reviewed Terraform plan destroyed 32 resources, its cleanup state lists no managed resources, and the shared backend bucket and IAM instance profile/role remain. A separate read-only audit found the baseline VPC (`vpc-0d46ffa77fcf6fe05`) still available but with no subnets, attached internet gateway, or network interfaces; its only route table contained the VPC-local route. The baseline EC2 instance (`i-00753e5b7bc4fce29`) was terminated, and `pelumi-db-subnet-group` was not found. The independent fresh test instance (`i-00d00ff42e0b0d31a`) remained running with both EC2 status checks `ok`; an external HTTP request to `44.207.7.16` returned HTTP 200 with the expected application HTML on November 6. See [Terraform and EC2 validation evidence](evidence/terraform-validation.md) and [isolated fresh user-data test evidence](evidence/project01-userdata-fresh-test.md).
 
 ## Technical Documentation
 
@@ -74,7 +74,7 @@ The November 2, 3, and 5 application and Terraform checks are point-in-time evid
 
 The configured $5 AWS Budgets alert is **not a hard spending cap**. EC2 and EBS may continue to incur charges while resources exist, and billing data can be delayed.
 
-The EC2 root volume is encrypted and the instance requires IMDSv2. Session Manager is used for administrative access rather than relying on publicly exposed SSH. The baseline EC2 instance and the isolated fresh test instance remain in public subnets. The separate failed duplicate's instance was retired on 2026-11-06. These are temporary test configurations, not a production security posture.
+The EC2 root volume is encrypted and the instance requires IMDSv2. Session Manager is used for administrative access rather than relying on publicly exposed SSH. The independent fresh test instance remains in a public subnet; the baseline EC2 instance was found terminated during the November 6 audit. The separate failed duplicate's instance was retired on 2026-11-06. These are temporary test configurations, not a production security posture.
 
 Before production use, move the workload into the intended private application tier, establish controlled ingress, add HTTPS, monitoring, and application hardening.
 
